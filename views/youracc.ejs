@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">All account info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="#">login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"> User Name:<p id="username"> </p>
+            </h5>
+            <h5 class="card-title"> balance:<p id="balance"> </p>
+            </h5>
+            <p class="card-text">User id:
+            <p id="Uid"></p>
+            </p>
+            <a href="sendmoney" class="btn btn-primary">send money</a>
+            <a href="#" class="btn btn-primary">recieve money</a>
+        </div>
+    </div>
+
+
+    <%- include('partials/footer') %>

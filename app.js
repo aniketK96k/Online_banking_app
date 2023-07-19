@@ -104,9 +104,48 @@ app.post("/login", function (req, res) {
     })
 });
 
-app.post("/sendmoney", function (req, res) {
+app.get("/sendmoney", function (req, res) {
+    if (req.isAuthenticated()) {
+        res.render("sendmoney");
+    }
+    else {
+        res.redirect("/login");
+    }
 
 });
+app.post("/sendmoney", function (req, res) {
+    const deductedMoney = req.body.money;
+    const receiverid = req.body.id;
+    const donarmoney = req.user.balance;
+    User.findById(receiverid).then(function (foundUser) {
+        if (foundUser) {
+            foundUser.balance = foundUser.balance + deductedMoney;
+            foundUser.save().then(function(){
+                res.redirect("youracc");
+            })
+        }
+        else {
+            console.log("user not found");
+        }
+    })
+
+    User.findById(req.user.id).then(function (foundUser) {
+        if (foundUser) {
+            foundUser.balance = donarmoney - deductedMoney;
+            foundUser.save().then(function(){
+                res.redirect("youracc");
+            })
+        }
+        else {
+            console.log("user not found");
+        }
+    })
+    console.log(deductedMoney);
+    console.log(receiverid);
+    console.log(req.user.id);
+    console.log(donarmoney);
+
+})
 
 
 

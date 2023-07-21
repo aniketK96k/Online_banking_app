@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+
+    <table class="table table-hover border-primary-subtle table-bordered">
+        <thead>
+            <tr class="table-warning">
+                <th scope="col">Sr no.</th>
+                <th scope="col">Name</th>
+                <th scope="col">email</th>
+                <th scope="col">id</th>
+                <th scope="col">contact</th>
+                <th scope="col">address</th>
+                <th scope="col">balance</th>
+
+            </tr>
+        </thead>
+        <tbody class=table-group-divider>
+            <% userWithbalance.forEach(function(users,index){ %>
+                <tr>
+                    <th scope="row">
+                        <%=index+1%>
+                    </th>
+                    <td>
+                        <%=users.name%>
+                    </td>
+                    <td>
+                        <%=users.username%>
+                    </td>
+                    <td>
+                        <%=users.id%>
+                    </td>
+                    <td>
+                        <%=users.contact%>
+                    </td>
+                    <td>
+                        <%=users.city%>
+                    </td>
+                    <td class="table-primary">
+                        <bold>
+                            <%=users.balance%>
+                        </bold>
+                    </td>
+                </tr>
+                <% }); %>
+
+
+        </tbody>
+    </table>
+    <%- include('partials/footer') %>

@@ -29,6 +29,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/bank", { useNewUrlParser: true, useU
 
 const userSchema = new mongoose.Schema({
     email: String,
+    name: String,
+    contact: Number,
+    city: String,
     balance: Number,
     password: String
 });
@@ -46,6 +49,15 @@ passport.deserializeUser(User.deserializeUser());
 app.get("/", (req, res) => {
     res.render("home");
 });
+app.get("/allCustomber", (req, res) => {
+    User.find({ "username": { $ne: null } }).then(function (foundUser) {
+        if (foundUser) {
+            res.render("allCustomber", { userWithbalance: foundUser });
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+});
 app.get("/login", (req, res) => {
     res.render("login");
 });
@@ -59,8 +71,15 @@ app.get("/sendmoney", (req, res) => {
     res.render("sendmoney");
 });
 app.get("/youracc", (req, res) => {
+    const uid = req.user.id;
     if (req.isAuthenticated()) {
-        res.render("youracc");
+        User.findById(uid).then(function (foundUser) {
+            if (foundUser) {
+                res.render("youracc", { userDetail: foundUser });
+            }
+        })
+
+
     }
     else {
         res.redirect("/login");
@@ -75,7 +94,7 @@ app.get("/logout", function (req, res) {
 })
 
 app.post("/register", function (req, res) {
-    User.register({ username: req.body.username, balance: req.body.balance }, req.body.password, function (err, User) {
+    User.register({ username: req.body.username, name: req.body.name, balance: req.body.balance, contact: req.body.contact, city: req.body.city }, req.body.password, function (err, User) {
         if (err) {
             console.log(err);
             res.redirect("/register");
@@ -90,7 +109,9 @@ app.post("/register", function (req, res) {
 app.post("/login", function (req, res) {
     const user = new User({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+
+
     });
     req.login(user, function (err) {
         if (err) {
@@ -119,36 +140,31 @@ app.post("/sendmoney", function (req, res) {
     const donarmoney = req.user.balance;
     User.findById(receiverid).then(function (foundUser) {
         if (foundUser) {
-            foundUser.balance = foundUser.balance + deductedMoney;
-            foundUser.save().then(function(){
-                res.redirect("youracc");
-            })
+            const k = Number(foundUser.balance) + Number(deductedMoney);
+            foundUser.balance = k;
+            foundUser.save().then(function () {
+
+            });
         }
         else {
             console.log("user not found");
         }
-    })
-
+    });
     User.findById(req.user.id).then(function (foundUser) {
         if (foundUser) {
             foundUser.balance = donarmoney - deductedMoney;
-            foundUser.save().then(function(){
+            foundUser.save().then(function () {
                 res.redirect("youracc");
-            })
+            });
         }
         else {
             console.log("user not found");
         }
-    })
-    console.log(deductedMoney);
-    console.log(receiverid);
-    console.log(req.user.id);
-    console.log(donarmoney);
-
-})
+    });
+});
 
 
-
-app.listen(3000, function () {
+const port = process.env.PORT
+app.listen(port, function () {
     console.log("running")
 })

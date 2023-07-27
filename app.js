@@ -138,29 +138,36 @@ app.post("/sendmoney", function (req, res) {
     const deductedMoney = req.body.money;
     const receiverid = req.body.id;
     const donarmoney = req.user.balance;
-    User.findById(receiverid).then(function (foundUser) {
-        if (foundUser) {
-            const k = Number(foundUser.balance) + Number(deductedMoney);
-            foundUser.balance = k;
-            foundUser.save().then(function () {
+   
+        User.findById(receiverid).then(function (foundUser) {
+            if (foundUser) {
+                const k = Number(foundUser.balance) + Number(deductedMoney);
+                foundUser.balance = k;
+                foundUser.save().then(function () {
 
-            });
-        }
-        else {
-            console.log("user not found");
-        }
-    });
-    User.findById(req.user.id).then(function (foundUser) {
-        if (foundUser) {
-            foundUser.balance = donarmoney - deductedMoney;
-            foundUser.save().then(function () {
-                res.redirect("youracc");
-            });
-        }
-        else {
-            console.log("user not found");
-        }
-    });
+                });
+            }
+            else {
+                console.log("user not found");
+            }
+        });
+        User.findById(req.user.id).then(function (foundUser) {
+            if (foundUser) {
+                foundUser.balance = donarmoney - deductedMoney;
+                foundUser.save().then(function () {
+                    res.redirect("youracc");
+                }).catch((err) => {
+                    console.log(err);
+                });
+            }
+            else {
+                console.log("user not found");
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+    
+   
 });
 
 

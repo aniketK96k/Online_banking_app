@@ -78,7 +78,7 @@ app.get("/youracc", (req, res) => {
                 res.render("youracc", { userDetail: foundUser });
             }
         })
-
+        .222
 
     }
     else {
@@ -138,7 +138,7 @@ app.post("/sendmoney", function (req, res) {
     const deductedMoney = req.body.money;
     const receiverid = req.body.id;
     const donarmoney = req.user.balance;
-   
+    if (deductedMoney >= 0) {
         User.findById(receiverid).then(function (foundUser) {
             if (foundUser) {
                 const k = Number(foundUser.balance) + Number(deductedMoney);
@@ -166,8 +166,14 @@ app.post("/sendmoney", function (req, res) {
         }).catch((err) => {
             console.log(err);
         });
-    
-   
+    }
+    else {
+        res.redirect("/youracc");
+        console.log("enter positve value");
+
+    }
+
+
 });
 
 
